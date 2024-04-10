@@ -1,3 +1,4 @@
+# ----------------- Terraform ----------------------
  Local .terraform directories
 **/.terraform/*
 
@@ -61,3 +62,30 @@ operations/variable-scripts/variable.json
 
 # Sentinel runtime directory
 .sentinel
+# --------------------------------------------------
+
+
+# ------------------- CDK --------------------------
+*.swp
+package-lock.json
+.pytest_cache
+*.egg-info
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# CDK Context & Staging files
+.cdk.staging/
+cdk.out/
+# --------------------------------------------------
