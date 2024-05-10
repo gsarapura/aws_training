@@ -84,8 +84,11 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.paramiko_env/
 
 # CDK Context & Staging files
 .cdk.staging/
 cdk.out/
 # --------------------------------------------------
+
+.idea/
