@@ -1,0 +1,11 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Stmt1546506260896",
+            "Action": "s3:ListBucket",
+            "Effect": "Allow",
+            "Resource": "ARN"
+        }
+    ]
+}
