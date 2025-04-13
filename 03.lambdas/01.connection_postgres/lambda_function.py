@@ -40,9 +40,10 @@ def lambda_handler(event, context):
     db_name = os.environ['DB_NAME']
     db_user = os.environ['DB_USER']
     db_password = os.environ['DB_PASSWORD']
+    db_port = os.environ['DB_PORT']
 
     # Connection string
-    conn_string = f"dbname='{db_name}' user='{db_user}' host='{db_host}' password='{db_password}'"
+    conn_string = f"dbname='{db_name}' user='{db_user}' host='{db_host}' password='{db_password}' port='{db_port}'"
     
     # Connect to your postgres DB
     conn = psycopg2.connect(conn_string)
@@ -67,3 +68,5 @@ def lambda_handler(event, context):
         'statusCode': 200,
         'body': records
     }
+
+print(lambda_handler({}, {}))
