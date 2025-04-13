@@ -1,7 +1,40 @@
 import psycopg2
 import os
+import urllib.request
+import json
+
+
+def get_pokemon_info():
+    try:
+        url = "https://pokeapi.co/api/v2/pokemon/ditto"
+        # Create a request with headers
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+        req = urllib.request.Request(url, headers=headers)
+        with urllib.request.urlopen(req) as response:
+            data = json.loads(response.read().decode())
+            # Extract relevant information
+            pokemon_info = {
+                'name': data['name'],
+                'id': data['id'],
+                'height': data['height'],
+                'weight': data['weight'],
+                'abilities': [ability['ability']['name'] for ability in data['abilities']],
+                'base_stats': {
+                    stat['stat']['name']: stat['base_stat'] 
+                    for stat in data['stats']
+                }
+            }
+            return pokemon_info
+    except Exception as e:
+        return f"Error fetching Pokemon info: {str(e)}"
+
 
 def lambda_handler(event, context):
+    r = get_pokemon_info()
+    print(r)
+
     # Database connection parameters
     db_host = os.environ['DB_HOST']
     db_name = os.environ['DB_NAME']
