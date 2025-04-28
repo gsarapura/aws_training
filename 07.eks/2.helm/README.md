@@ -2,6 +2,9 @@ https://www.youtube.com/watch?v=jUYNS90nq8U
 
 ```bash
 #!/bin/bash
+
+helm create webapp1
+
 kubectl get all
 
 minikube ip 
