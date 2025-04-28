@@ -1,0 +1,5 @@
+nameSpace: dev
+
+configMap:
+  data:
+    CUSTOM_HEADER: "Welcome to DEV"
