@@ -801,6 +801,13 @@ postgresql:
   # existing external PostgreSQL database
   enabled: true
 
+  persistence:
+    storageClass: ebs-sc
+  size: 8Gi
+  primary:
+    tolerations:
+    - operator: Exists
+
   # Used by init container to check that db is running. (Even if enabled:false)
   image:
     registry: "docker.io"
