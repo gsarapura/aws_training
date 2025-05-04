@@ -1,0 +1,5 @@
+#docker build -t load:v1 -f Dockerfile.load .
+FROM alpine
+RUN  apk update
+RUN  apk add sqlite
+COPY load.sql /load.sql

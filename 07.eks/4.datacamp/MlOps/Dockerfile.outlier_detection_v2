@@ -1,0 +1,7 @@
+#docker build -t outlier-detection:v2 -f Dockerfile.outlier_detection_v2
+FROM alpine
+RUN  apk add python3
+COPY data.csv /data.csv
+COPY detect_outliers_v2.py /detect_outliers_v2.py
+
+CMD  python /detect_outliers_v2.py

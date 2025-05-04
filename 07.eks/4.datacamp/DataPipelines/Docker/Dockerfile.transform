@@ -1,0 +1,5 @@
+#docker build -t transform:v1 -f Dockerfile.transform .
+FROM alpine
+RUN  apk update
+RUN  apk add sqlite
+COPY transform.sql /transform.sql

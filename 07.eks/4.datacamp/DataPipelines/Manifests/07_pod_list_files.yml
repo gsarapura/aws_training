@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-list-files
+spec:
+  terminationGracePeriodSeconds: 2
+  containers:
+  - name: list-files
+    image: alpine
+    command: ['sh', '-c', 'ls -l /extract /transform /load']
+    #command:
+    #- sleep
+    #- "3600"
+    volumeMounts:
+    - name: pv-extract
+      mountPath: /extract
+    - name: pv-transform
+      mountPath: /transform
+    - name: pv-load
+      mountPath: /load
+  restartPolicy: Never
+  volumes:
+  - name: pv-extract
+    persistentVolumeClaim:
+      claimName: pvc-extract
+  - name: pv-transform
+    persistentVolumeClaim:
+      claimName: pvc-transform
+  - name: pv-load
+    persistentVolumeClaim:
+      claimName: pvc-load

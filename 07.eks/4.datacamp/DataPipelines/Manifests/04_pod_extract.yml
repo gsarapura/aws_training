@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-extract
+spec:
+  terminationGracePeriodSeconds: 2
+  containers:
+  - name: extract
+    image: extract:v1
+    command:
+    - cp
+    - /yellow_tripdata_2024-01.partial.csv
+    - /extract
+    volumeMounts:
+    - name: pv-extract
+      mountPath: /extract
+  restartPolicy: Never
+  volumes:
+  - name: pv-extract
+    persistentVolumeClaim:
+      claimName: pvc-extract

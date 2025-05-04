@@ -1,0 +1,3 @@
+#docker build -t extract:v1 -f Dockerfile.extract .
+FROM alpine
+COPY yellow_tripdata_2024-01.partial.csv /yellow_tripdata_2024-01.partial.csv

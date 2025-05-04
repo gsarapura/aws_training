@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-load
+spec:
+  terminationGracePeriodSeconds: 2
+  containers:
+  - name: load
+    image: load:v1
+    command: ['sh', '-c', 'sqlite3 /transform/transform.sqlite < load.sql']
+    volumeMounts:
+    - name: pv-transform
+      mountPath: /transform
+    - name: pv-load
+      mountPath: /load
+  restartPolicy: Never
+  volumes:
+  - name: pv-transform
+    persistentVolumeClaim:
+      claimName: pvc-transform
+  - name: pv-load
+    persistentVolumeClaim:
+      claimName: pvc-load
