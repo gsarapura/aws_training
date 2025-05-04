@@ -1,8 +1,8 @@
-# QuickStart: Managed Type Cluster
+# QuickStart: Auto Mode Cluster
 https://docs.aws.amazon.com/eks/latest/userguide/quickstart.html
 
 ```bash
-# Configure the cluster: MANAGED TYPE
+# Configure the cluster
 eksctl create cluster -f 1.cluster-config.yaml
 # Create IngressClass
 kubectl apply -f 2.ingressclass.yaml
