@@ -1,0 +1,41 @@
+global:
+  dagsterHome: "/opt/dagster/dagster_home"
+
+dagsterWebserver:
+  replicaCount: 1
+  image:
+    repository: "docker.io/dagster/dagster-celery-k8s"
+    tag: "1.6.12"  # Pick a specific version for consistency
+  service:
+    type: LoadBalancer  # Exposes Dagit on a public IP (good for testing)
+
+dagsterDaemon:
+  enabled: true
+  image:
+    repository: "docker.io/dagster/dagster-celery-k8s"
+    tag: "1.6.12"
+
+postgresql:
+  enabled: true
+  auth:
+    postgresPassword: "dagster"  # For testing only
+  primary:
+    persistence:
+      enabled: true
+      size: 5Gi
+      storageClass: "gp3"
+
+dagster-user-deployments:
+  enabled: true
+  enableSubchart: true
+
+  deployments:
+    - name: "k8s-example-user-code-1"
+      image:
+        repository: "docker.io/gsarapura/k8s-dagster"
+        tag: latest
+        pullPolicy: Always
+      dagsterApiGrpcArgs:
+        - "--python-file"
+        - "/iris_analysis/definitions.py"
+      port: 3030

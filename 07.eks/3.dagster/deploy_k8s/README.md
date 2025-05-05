@@ -1,21 +1,60 @@
-View this example in the Dagster docs at https://docs.dagster.io/deployment/guides/kubernetes/deploying-with-helm
+# View this example in the Dagster docs at https://docs.dagster.io/deployment/guides/kubernetes/deploying-with-helm
 
+- Build user code image
 ```bash
 docker build . -t iris_analysis:1
 docker tag iris_analysis:1 gsarapura/k8s-dagster:latest
 docker push gsarapura/k8s-dagster:latest 
 
-eksctl create cluster -f cluster-config.yaml
+```
+- Test
+```bash
+eksctl create cluster \
+  --name k8s-dagster-test \
+  --region us-east-1 \
+  --nodegroup-name single-node \
+  --node-type t3.medium \
+  --nodes 1 \
+  --nodes-min 1 \
+  --nodes-max 1 \
+  --managed \
+  --with-oidc \
+  --dry-run
 
-helm repo add dagster https://dagster-io.github.io/helm
-helm repo update
-helm show values dagster/dagster > values.yaml
-helm upgrade --install dagster dagster/dagster -f values.yaml
-kubectl logs <pod-name>
+# Storage class
+kubectl get storageclass
+# Add gp3
+kubectl apply -f storage-class-gp3.yaml
+# Set as default
+kubectl patch storageclass gp3 -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 
-eksctl delete cluster -f ./cluster-config.yaml
+eksctl get nodegroup --cluster k8s-dagster-test --region us-east-1 -o yaml
+aws iam attach-role-policy \
+    --role-name eksctl-k8s-dagster-test-nodegroup--NodeInstanceRole-bOoPs0nP6x18 \
+    --policy-arn arn:aws:iam::992382742298:policy/EKSNodeEBSPolicy
+aws iam list-attached-role-policies \
+    --role-name eksctl-k8s-dagster-test-nodegroup--NodeInstanceRole-bOoPs0nP6x18
+eksctl get nodegroup --cluster k8s-dagster-test --region us-east-1
+
+# -----------------------------------------------------------------------------------------------
+# https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html
+# Adding OIDC: OIDC (OpenID Connect) is a simple identity layer on top of the OAuth 2.0 protocol
+eksctl utils associate-iam-oidc-provider --region us-east-1 --cluster dagster-test --approve
+# -----------------------------------------------------------------------------------------------
+
+
+kubectl create namespace dagster
+helm install dagster dagster/dagster \
+    --namespace dagster \
+    -f values-test.yaml
+helm upgrade dagster dagster/dagster \
+    --namespace dagster \
+    -f values-test.yaml
+
+kubectl apply -f service-ui.yaml
 ```
 
+- Dev
 
 ```bash
 # Node managed
